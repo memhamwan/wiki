@@ -13,6 +13,11 @@ disablePathToLower = true
 # Required if you want to render robots.txt template
 enableRobotsTXT = true
 
+[params]
+  geekdocRepo = "https://github.com/memhamwan/wiki"
+  geekdocEditPath = "edit/main"
+  geekdocCollapseAllSections = true
+
 # Needed for mermaid shortcodes
 [markup]
   [markup.goldmark.renderer]

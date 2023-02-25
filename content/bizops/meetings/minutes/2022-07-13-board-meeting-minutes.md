@@ -1,3 +1,6 @@
+---
+title: 2022-07-13 Board Meeting Minutes
+---
 # HamWAN Memphis Metro 2022 Q2 Board Meeting
 
 ## Agenda

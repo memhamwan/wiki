@@ -1,3 +1,6 @@
+---
+title: Silencing Alerts
+---
 Sometimes, alerts need to be silenced. This may be because of planned maintenance, or maybe it's because of an outage that is being tracked in issues for follow-up. No matter what, silencing isn't a rare occurrence. This wiki page documents how to handle that process. Alert Manager is where alerts are deduplicated, grouped, and messaged. This is where any sort of silencing will take place. Note that the alert will continue to fire in upstream systems (i.e. [Prometheus](https://prometheus.memhamwan.net)), and this is expected. We want the downtime and alert condition to be tracked, just not to be messaged so as to avoid creating noise.
 
 # Silencing Alerts
@@ -23,12 +26,12 @@ There are two steps to silencing the alert: identifying the pattern and writing 
 ## Writing the rest of the details
 
 1. Confirm that there is a GitLab issue logged that is describing what needs to be done for the silence to go away; add the "alertmanager silence" label to the issue
-   ![Screen_Shot_2022-08-27_at_6.15.01_PM](uploads/36839f7507ec5d92c0290f9a4dccaee9/Screen_Shot_2022-08-27_at_6.15.01_PM.png)
+   ![Screen_Shot_2022-08-27_at_6.15.01_PM](images/step-1.png)
 2. Consider how long the silence should be active; try to err on underestimating rather than overestimating the timeframe to avoid mistakenly leaving a silence running for too long; this value should be stated in terms of hours ("h"), days ("d"), or weeks ("w"); enter this value in the "duration" field
-   ![Screen_Shot_2022-08-27_at_6.13.48_PM](uploads/cc88c139d9ef303b9cdcdc26b37570e4/Screen_Shot_2022-08-27_at_6.13.48_PM.png)
+   ![Screen_Shot_2022-08-27_at_6.13.48_PM](images/step-2.png)
 2. Under the "Creator" field, enter your GitLab username
 3. Under the "Comment" field, write a brief explanation of why you are creating the silence; there should always be an accompanying GitLab Issue created, and be sure to link to it in your comment
-   ![Screen_Shot_2022-08-27_at_6.16.21_PM](uploads/981e24719a0d9b3df415ca4332c43799/Screen_Shot_2022-08-27_at_6.16.21_PM.png)
+   ![Screen_Shot_2022-08-27_at_6.16.21_PM](images/step-3.png)
 4. Submit the silence
-   ![Screen_Shot_2022-08-27_at_6.16.24_PM](uploads/a5750621c21c317e79ad5b5d20cf4673/Screen_Shot_2022-08-27_at_6.16.24_PM.png)
+   ![Screen_Shot_2022-08-27_at_6.16.24_PM](images/step-4.png)
 5. Copy and paste the URL to the silence into a comment on the GitLab issue so that it can be traced

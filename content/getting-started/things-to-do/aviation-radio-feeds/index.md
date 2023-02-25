@@ -1,3 +1,6 @@
+---
+title: "Aviation Radio Feeds"
+---
 MemHamWAN hosts a LiveATC.net scanner appliance in midtown Memphis serving Memphis International and related nearby airspaces. This effort was deployed orginally in August and September 2022 with planning in https://gitlab.com/groups/memhamwan/-/epics/12.
 
 ## Accessing the Feed
@@ -24,7 +27,7 @@ This device is treated as a blackbox appliance on loan, meaning that we do not h
 
 A folded dipole antenna is deployed on the tower, which is then connected to coax that runs into HamWAN's cabinet. There is a shelf in the cabinet where all of the filters, receivers, and computers are located.
 
-![Untitled_Diagram.drawio.svg](uploads/11c69b49db2ac4585f6b5d85df29368f/Untitled_Diagram.drawio.svg)
+![Untitled_Diagram.drawio.svg](images/Untitled_Diagram.drawio.svg)
 
 ### Network Configuration
 

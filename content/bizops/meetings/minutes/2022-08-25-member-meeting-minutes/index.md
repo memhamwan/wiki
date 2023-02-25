@@ -1,3 +1,6 @@
+---
+title: 2022-08-25 Member Meeting Minutes
+---
 # HamWAN Memphis Metro 2022 Members Meeting
 
 ## Agenda
@@ -54,7 +57,7 @@
 - @rturner: I MOVE THAT we recess for 5 minutes in order to conduct our election by written ballot.
   - Cliff second
 
-![Screen_Shot_2022-08-26_at_12.01.07_PM](uploads/899091d60e3d6978816b24d7e2622558/Screen_Shot_2022-08-26_at_12.01.07_PM.png)
+![Screen_Shot_2022-08-26_at_12.01.07_PM](images/Screen_Shot_2022-08-26_at_12.01.07_PM.png)
 
 - @rturner: I call this meeting back to order at 8:44 PM CT. Congratulations to the new board of directors. Pursuant to [Article 3 Section 8](https://gitlab.com/groups/memhamwan/-/wikis/Business-Ops/Bylaws#section-8-regular-meetings) the first regular meeting of directors will take place on 2022-09-22 at 8 PM CT.
 - @rturner: is there any other business?

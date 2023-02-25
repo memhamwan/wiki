@@ -59,7 +59,7 @@ title: 2022-08-25 Member Meeting Minutes
 
 ![Screen_Shot_2022-08-26_at_12.01.07_PM](images/Screen_Shot_2022-08-26_at_12.01.07_PM.png)
 
-- @rturner: I call this meeting back to order at 8:44 PM CT. Congratulations to the new board of directors. Pursuant to [Article 3 Section 8](https://gitlab.com/groups/memhamwan/-/wikis/Business-Ops/Bylaws#section-8-regular-meetings) the first regular meeting of directors will take place on 2022-09-22 at 8 PM CT.
+- @rturner: I call this meeting back to order at 8:44 PM CT. Congratulations to the new board of directors. Pursuant to [Article 3 Section 8](../Bylaws#section-8-regular-meetings) the first regular meeting of directors will take place on 2022-09-22 at 8 PM CT.
 - @rturner: is there any other business?
 - @seichold opened discussion on how to improve transparency of board activities and expectations of board members.
   - @turnrye proposes that we could have board interviews and publish those to our website. This could be used to promote Memhamwan and give insights into the organization.

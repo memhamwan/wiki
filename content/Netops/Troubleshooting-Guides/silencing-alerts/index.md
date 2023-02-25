@@ -1,7 +1,7 @@
 ---
 title: Silencing Alerts
 ---
-Sometimes, alerts need to be silenced. This may be because of planned maintenance, or maybe it's because of an outage that is being tracked in issues for follow-up. No matter what, silencing isn't a rare occurrence. This wiki page documents how to handle that process. Alert Manager is where alerts are deduplicated, grouped, and messaged. This is where any sort of silencing will take place. Note that the alert will continue to fire in upstream systems (i.e. [Prometheus](https://prometheus.memhamwan.net)), and this is expected. We want the downtime and alert condition to be tracked, just not to be messaged so as to avoid creating noise.
+Sometimes, alerts need to be silenced. This may be because of planned maintenance, or maybe it's because of an outage that is being tracked in issues for follow-up. No matter what, silencing isn't a rare occurrence. This wiki page documents how to handle that process. Alert Manager is where alerts are deduplicated, grouped, and messaged. This is where any sort of silencing will take place. Note that the alert will continue to fire in upstream systems (i.e. [Prometheus](https://prometheus.ingress.k8s.memhamwan.net)), and this is expected. We want the downtime and alert condition to be tracked, just not to be messaged so as to avoid creating noise.
 
 # Silencing Alerts
 
@@ -9,14 +9,14 @@ There are two steps to silencing the alert: identifying the pattern and writing 
 
 ## The easy way if its just one alert
 
-1. Navigate to [alert manager](https://alertmanager.memhamwan.net/#/alerts)
+1. Navigate to [alert manager](https://alertmanager.ingress.k8s.memhamwan.net/#/alerts)
 2. Confirm that the alert you wish to silence is appearing on this page; if you're uncertain as to which alert relates to a specific message, click on the "+ Info" button to see that detail
 3. Once you've found the alert that you wish to silence, click on the "Silence" button
 4. Move on to "Writing the rest of the details" section below 
 
 ## The more powerful way for multiple alerts
 
-1. Navigate to [alert manager](https://alertmanager.memhamwan.net/#/alerts)
+1. Navigate to [alert manager](https://alertmanager.ingress.k8s.memhamwan.net/#/alerts)
 2. Confirm that the alert you wish to silence is appearing on this page; if you're uncertain as to which alert relates to a specific message, click on the "+ Info" button to see that detail
 3. Once you've found the alerts that you wish to silence, review the relevant labels displayed for it, as these values are how to will define a silencing rule; most of the time, you'll want to silence an alert for a given `instance` and `job`; for instance, you may want to silence all alerts matching `instance="allstar.leb.memhamwan.net:5038"` and `job="allstar"`
 4. In the top section of the page under the "Filter" heading, add the matchers one at a time, and confirm that _just_ the item you wish to silence is being displayed; the right level of specificity must be given to avoid accidentally silencing future alerts too

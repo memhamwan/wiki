@@ -1,6 +1,6 @@
 # Devices
 
-## r1.ftn - https://gitlab.com/memhamwan/inventory/-/issues/37
+## r1.ftn - https://gitlab.com/memhamwan/bizops/inventory/-/issues/37
 
 - Mirkotik HAP AC
 - Dual uplink: one port is consumer broadband, the other is to the SCO site

@@ -1,4 +1,4 @@
-# [Alert Rules](https://prometheus.memhamwan.net/rules#APRS)
+# [Alert Rules](https://prometheus.ingress.k8s.memhamwan.net/rules#APRS)
 
 ## APRXNotRunning
 

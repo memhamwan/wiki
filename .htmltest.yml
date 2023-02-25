@@ -1,5 +1,6 @@
 DirectoryPath: "dist"
 # Hugo's directory structure triggers this:
 IgnoreDirectoryMissingTrailingSlash: true
+IgnoreInternalEmptyHash: true
 IgnoreURLs:
   - https://github.com/memhamwan/wiki/edit/main/

@@ -1,0 +1,3 @@
+Welcome to the MemHamWAN Wiki! This wiki is the home of our documentation for all things related to MemHamWAN: from how to get connected to reference materials about the network. See the sidebar to get started.
+
+Do you have something that you'd like to add? See something that needs correcting? Click the "Edit page" link in the top right corner of each page to contribute your content. We welcome all changes!

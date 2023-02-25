@@ -1,3 +1,6 @@
+---
+title: 2022-09-22 Board Meeting Minutes
+---
 # HamWAN Memphis Metro 2022 Q3 Board Meeting
 
 ## Agenda

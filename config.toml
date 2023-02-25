@@ -1,5 +1,5 @@
 languageCode = 'en-us'
-title = 'HamWAN Memphis Metro Wiki'
+title = 'MemHamWAN Wiki'
 theme = 'hugo-geekdoc'
 baseURL = "https://wiki.memhamwan.org"
 
@@ -17,6 +17,7 @@ enableRobotsTXT = true
   geekdocRepo = "https://github.com/memhamwan/wiki"
   geekdocEditPath = "edit/main"
   geekdocCollapseAllSections = true
+  geekdocLogo = "logo.png"
 
 # Needed for mermaid shortcodes
 [markup]

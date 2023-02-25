@@ -1,3 +1,6 @@
+---
+title: 2022-08-25 Member Meeting Minutes
+---
 # HamWAN Memphis Metro 2022 Members Meeting
 
 ## Agenda
@@ -41,22 +44,22 @@
 
 - @seichold: I move that we open nominations for election of the 2022-2023 directors
   - Rick Barnett Seconded
-- @rturner: election of the 2022-2023 board will take place via nominations from the floor. Pursuant with [Article 3 Section 1](https://gitlab.com/groups/memhamwan/-/wikis/Business-Ops/Bylaws#section-1-number) of our bylaws, tonight we will be electing four members of the board. At this time any member wishing to nominate a member to the board may raise their nomination by speaking that person's name.
+- @rturner: election of the 2022-2023 board will take place via nominations from the floor. Pursuant with [Article 3 Section 1](../../../Bylaws#section-1-number) of our bylaws, tonight we will be electing four members of the board. At this time any member wishing to nominate a member to the board may raise their nomination by speaking that person's name.
 - Ryan Turner
 - Sam Eichold
 - Cliff Gurlen
 - Michael Knight
 - @rturner: are there any further nominations?
-- @rturner: Pursuant with [article 13 sections 7 and 8](https://gitlab.com/groups/memhamwan/-/wikis/Business-Ops/Bylaws#section-7-voting-rights) each member may vote on each motion, and election of directions shall take place via written ballot. For the sake of expediency, we will utilize threaded the chat in this Discord channel. Each motion will be sent as a message. Members may cast their ballots using "thumbs up" to indicate yae and a "thumbs down" to indicate a nay. Ballots will be open for 5 minutes. A sample ballot is as follows:
+- @rturner: Pursuant with [article 13 sections 7 and 8](../../../Bylaws#section-7-voting-rights) each member may vote on each motion, and election of directions shall take place via written ballot. For the sake of expediency, we will utilize threaded the chat in this Discord channel. Each motion will be sent as a message. Members may cast their ballots using "thumbs up" to indicate yae and a "thumbs down" to indicate a nay. Ballots will be open for 5 minutes. A sample ballot is as follows:
 
 > I move that Ryan Turner, Sam Eichold, Cliff Gurlen, and Michael Knight be elected to the board of directors of HamWAN Memphis Metro, Inc. Indicate yae by a thums-up reaction and nay by a thumbs-down reaction. 4 responses must be received to reach quorum. Elections will remain open until 2022-08-25 8:46 PM CT.
 
 - @rturner: I MOVE THAT we recess for 5 minutes in order to conduct our election by written ballot.
   - Cliff second
 
-![Screen_Shot_2022-08-26_at_12.01.07_PM](uploads/899091d60e3d6978816b24d7e2622558/Screen_Shot_2022-08-26_at_12.01.07_PM.png)
+![Screen_Shot_2022-08-26_at_12.01.07_PM](images/Screen_Shot_2022-08-26_at_12.01.07_PM.png)
 
-- @rturner: I call this meeting back to order at 8:44 PM CT. Congratulations to the new board of directors. Pursuant to [Article 3 Section 8](https://gitlab.com/groups/memhamwan/-/wikis/Business-Ops/Bylaws#section-8-regular-meetings) the first regular meeting of directors will take place on 2022-09-22 at 8 PM CT.
+- @rturner: I call this meeting back to order at 8:44 PM CT. Congratulations to the new board of directors. Pursuant to [Article 3 Section 8](../../../Bylaws#section-8-regular-meetings) the first regular meeting of directors will take place on 2022-09-22 at 8 PM CT.
 - @rturner: is there any other business?
 - @seichold opened discussion on how to improve transparency of board activities and expectations of board members.
   - @turnrye proposes that we could have board interviews and publish those to our website. This could be used to promote Memhamwan and give insights into the organization.

@@ -1,0 +1,7 @@
+DirectoryPath: "dist"
+# Hugo's directory structure triggers this:
+IgnoreDirectoryMissingTrailingSlash: true
+IgnoreInternalEmptyHash: true
+IgnoreURLs:
+  - https://github.com/memhamwan/wiki/edit/main/ # Because the page we're editing may not exist yet
+  - https://gitlab.com/ # apparently we get ratelimited?? bummer

@@ -1,3 +1,6 @@
+---
+weight: 1
+---
 *This article is a work-in-progress*
 
 HamWAN Memphis Metro is building an wide area network in the midsouth for education, experimentation, and emergency use. The project can be split in three parts: the core network, network services, and user services. Together these make for a project and community supporting the intersection of computing and radios in and around Memphis.
@@ -40,8 +43,3 @@ For times when the device is not accessible over IP, but it might be available v
 
 GitLab CI running terraform and ansible, though initial provisioning is manual
 
-# Network Services
-
-Non exhaustive list
-
-# User Services

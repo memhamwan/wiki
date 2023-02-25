@@ -3,6 +3,6 @@ DirectoryPath: "dist"
 IgnoreDirectoryMissingTrailingSlash: true
 IgnoreURLs:
   # Don't increment the page view count
-  - "https://gc.zgo.at/count.js"
+  # - "https://gc.zgo.at/count.js"
   # Don't check LinkedIn
-  - https://linkedin.com/in/robbromans/
+  # - https://linkedin.com/in/robbromans/

@@ -57,6 +57,6 @@ Run these commands in your CLI to configue it as our network expects:
 
 # Aiming the antenna
 
-- Check the [coverage map](Coverage-Map) to see what's suitable and calculate the azimuth
+- Check the [coverage map](../coverage-map) to see what's suitable and calculate the azimuth
 - Point it in the general direction and power the device on
 - Aim it using the signal indicators on your device

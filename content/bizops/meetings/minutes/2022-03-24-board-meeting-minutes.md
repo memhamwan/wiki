@@ -137,7 +137,7 @@ title: 2022-03-24 Board Meeting Minutes
 -   [*Ryan Turner*](mailto:ryan.turner@memhamwan.org): I MOVE THAT
     Pursuant to Article 10 Section 1, we amend article 3 section 8 of
     the bylaws [*which currently read
-    as*](../Bylaws#section-8-regular-meetings):\
+    as*](../../../Bylaws#section-8-regular-meetings):\
     "Regular meetings of directors shall be held on First Wednesday of
     the month at 7:30 p.m., unless such day falls on a legal holiday, in
     which event the regular meeting shall be held at the same hour and
@@ -165,7 +165,7 @@ title: 2022-03-24 Board Meeting Minutes
 -   [*Ryan Turner*](mailto:ryan.turner@memhamwan.org): I MOVE THAT
     Pursuant to Article 10 Section 1, we amend Article 13, Section 2 of
     the bylaws [*which currently read
-    as*](../Bylaws#section-2-regular-meetings):\
+    as*](../../../Bylaws#section-2-regular-meetings):\
     "A regular meeting of members shall be held on \_, at \_ .m., for
     the purpose of electing directors and transacting other business as
     may come before the meeting. The candidates receiving the highest

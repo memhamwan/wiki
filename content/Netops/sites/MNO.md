@@ -1,3 +1,6 @@
+---
+title: MNO
+---
 # Hosts
 
 ## ups.mno.memhamwan.net (44.34.129.50)

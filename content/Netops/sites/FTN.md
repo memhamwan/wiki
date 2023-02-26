@@ -1,3 +1,6 @@
+---
+title: FTN
+---
 # Devices
 
 ## r1.ftn - https://gitlab.com/memhamwan/bizops/inventory/-/issues/37

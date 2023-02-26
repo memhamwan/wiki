@@ -1,3 +1,6 @@
+---
+title: LEB
+---
 # ESXi
 
 Accessible 44.34.128.164, but TCP 80 and 443 are filtered at the edge. To administer this you must be within the network. Credentials are "root" and the standard password.

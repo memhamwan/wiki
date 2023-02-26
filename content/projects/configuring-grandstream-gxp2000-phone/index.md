@@ -28,18 +28,18 @@ In this example, we're configuring 100383 on Hams Over IP for KJ4GZB. His passwo
 
 Given the information from your exchange, modify the values on the "Account 1" page to look like this:
 
-![](images/grandstream-account-1-1.png)
-![](images/grandstream-account-1-2.png)
+![Screenshot of the account 1 configuration page, pt 1](images/grandstream-account-1-1.png)
+![Screenshot of the account 1 configuration page, pt 2](images/grandstream-account-1-2.png)
 
 Then, modify the values on the "Basic" page to look like this:
 
-![](images/grandstream-basic-1.png)
-![](images/grandstream-basic-2.png)
+![Screenshot of the basic configuration page, pt 1](images/grandstream-basic-1.png)
+![Screenshot of the basic configuration page, pt 2](images/grandstream-basic-2.png)
 
 Use [this page](https://pb.hamsoverip.com/diy/) to find what your public IP address is, and be sure to put this in the "Use NAT IP" field. Note that if your public IP changes, you'll need to come and change this value. Finally, modify the valeus on the "Advanced" page to look like this:
 
-![](images/grandstream-advanced-1.png)
-![](images/grandstream-advanced-2.png)
+![Screenshot of the advanced configuration page, pt 1](images/grandstream-advanced-1.png)
+![Screenshot of the advanced configuration page, pt 2](images/grandstream-advanced-2.png)
 
 Once this is done, reboot your phone (unplug and replug is fine) and then wait for it to register. This may take about 2-3 minutes. The phone's LCD screen should indicate the status of registration. Once it's done, go ahead and try a few test calls! Refer to the lsit below for two example extensions:
 

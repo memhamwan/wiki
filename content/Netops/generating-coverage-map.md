@@ -14,7 +14,7 @@ docker run -it --entrypoint /bin/bash signal-server
 
 ## Get your SRTM data setup
 
-SRTM 3 second data is a good DEM dataset, but AW3D30 also provides great coverage and has better accuracy and precision (ref https://doi.org/10.3390/rs12213482). So let's consider looking into this instead. There are more hoops to jump through though, and unless you're trying to model microwave systems and needing detailed maps, it's probably not worth the fuss. [Start here](https://wiki.openstreetmap.org/wiki/AW3D30) for instructions on how to download the data.
+SRTM 3 second data is a good DEM dataset, but AW3D30 also provides great coverage and has better accuracy and precision (ref [10.3390/rs12213482](https://doi.org/10.3390/rs12213482)). So let's consider looking into this instead. There are more hoops to jump through though, and unless you're trying to model microwave systems and needing detailed maps, it's probably not worth the fuss. [Start here](https://wiki.openstreetmap.org/wiki/AW3D30) for instructions on how to download the data.
 
 Once you have the data that you need, you'll need to convert the data to hgt format, and from there to sdf. Luckily Jaxa provided a script for the first part: https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/data/aw3d30_srtmhgt.zip
 

@@ -1,6 +1,7 @@
 ---
 weight: 2
 ---
+_This is a work-in-progress and is not yet complete._
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
     crossorigin=""/>
@@ -13,7 +14,12 @@ weight: 2
 var map = L.map('map').setView([35.0800, -89.9303], 9);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> and HamWAN Memphis Metro'
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+L.tileLayer('/map-tiles/sco-coverage/OUTPUT_DIRECTORY/{z}/{x}/{y}.png', {
+    maxZoom: 14,
+    attribution: '&copy; HamWAN Memphis Metro',
+    opacity: 0.5
 }).addTo(map);
 function onEachFeature(feature, layer) {
     let popupContent = `<p>${feature.properties.name}</p>`;

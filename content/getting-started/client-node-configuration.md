@@ -45,13 +45,16 @@ Run these commands in your CLI to configue it as our network expects:
 /interface wireless channels add band=5ghz-onlyn comment="Cell sites radiate this at 0 degrees (north)" frequency=5920 list=HamWAN name=Sector1-10 width=10
 /interface wireless channels add band=5ghz-onlyn comment="Cell sites radiate this at 120 degrees (south-east)" frequency=5900 list=HamWAN name=Sector2-10 width=10
 /interface wireless channels add band=5ghz-onlyn comment="Cell sites radiate this at 240 degrees (south-west)" frequency=5880 list=HamWAN name=Sector3-10 width=10
+/interface wireless channels add band=5ghz-onlyn comment="Cell sites omni channel 1" frequency=5865 list=HamWAN name=Omni1-5 width=5
+/interface wireless channels add band=5ghz-onlyn comment="Cell sites omni channel 2" frequency=5855 list=HamWAN name=Omni2-5 width=5
+/interface wireless channels add band=5ghz-onlyn comment="Cell sites omni channel 3" frequency=5845 list=HamWAN name=Omni3-5 width=5
 /interface wireless set 0 disabled=no country=no_country_set frequency-mode=superchannel band=5ghz-onlyn mode=station scan-list="HamWAN" ssid=HamWAN wireless-protocol=nv2
+/ip firewall nat add chain=srcnat action=masquerade out-interface=wlan1
 /ip dhcp-client add add-default-route=yes dhcp-options=hostname,clientid disabled=no interface=wlan1
 /ip address add address=192.168.88.1/24 interface=ether1
 /ip pool add name=dhcp-pool ranges=192.168.88.100-192.168.88.199
 /ip dhcp-server network add address=192.168.88.0/24 dns-server=44.24.244.1,44.24.245.1 gateway=192.168.88.1
 /ip dhcp-server add address-pool=dhcp-pool interface=ether1 name=dhcp disabled=no
-/ip firewall nat add chain=srcnat action=masquerade out-interface=wlan1
 /ip service set ssh port=222
 ```
 

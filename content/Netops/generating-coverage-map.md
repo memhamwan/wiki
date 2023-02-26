@@ -1,3 +1,208 @@
+---
+title: "Generating Coverage Map"
+---
+
+Based on prior works: https://fasma.org/modeling-repeaters-in-north-florida/ and https://github.com/kd7lxl/signalserver-scripts.
+
+For this we'll be using a dockerized version of the signal-server. This is handy because the project doesn't distribute binaries and is a bit sporatically maintained, so this lets us skip any sort of build env setup steps. And docker is fun to play in, afterall. You can find the dockerfile in my fork of the [Signal-Server](https://github.com/turnrye/Signal-Server) project.
+
+To explore the image, drop into a shell:
+
+```
+docker run -it --entrypoint /bin/bash signal-server
+```
+
+## Get your SRTM data setup
+
+SRTM 3 second data is a good DEM dataset, but AW3D30 also provides great coverage and has better accuracy and precision (ref https://doi.org/10.3390/rs12213482). So let's consider looking into this instead. There are more hoops to jump through though, and unless you're trying to model microwave systems and needing detailed maps, it's probably not worth the fuss. [Start here](https://wiki.openstreetmap.org/wiki/AW3D30) for instructions on how to download the data.
+
+Once you have the data that you need, you'll need to convert the data to hgt format, and from there to sdf. Luckily Jaxa provided a script for the first part: https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/data/aw3d30_srtmhgt.zip
+
+In the container, download the helper script. You'll also need to `apt update && apt install bc` because the script uses this calculator that is not preinstalled. 
+
+Follow the readme which explains how to use the script with its `input` and `output` directories. Note that the script they include has bugs, so I fixed them. It appears that their datasets filenames changed but this script wasn't maintained. For reference, here are what my input filenames look like: `./input/ALPSMLC30_N031W092_DSM.tif` Here's what I ended up having to use for this to work:
+
+```bash
+#!/usr/bin/env bash
+# Copyright 2019 Japan Aerospace Exploration Agency, 2023 Ryan Turner
+
+INPUT_DIR=./input
+OUTPUT_DIR=./output
+vrtfile=./input.vrt
+
+[ -d "$OUTPUT_DIR" ] || mkdir -p $OUTPUT_DIR || { echo "error: $OUTPUT_DIR " 1>&2; exit 1; }
+
+gdalbuildvrt -overwrite -srcnodata -9999 -vrtnodata -9999 ${vrtfile} ${INPUT_DIR}/*_DSM.tif
+
+res=$(echo 1/3600/2 |bc -l)
+for aw3d30 in  "${INPUT_DIR}"/*_DSM.tif
+do
+   echo "Working on ${aw3d30}"
+   [ -f "${aw3d30}" ] || continue
+   srtm=$(echo "${aw3d30}" | awk -F / '{print substr($NF,11,1) substr($NF,13,6)".hgt"}')
+
+   [ -f "${OUTPUT_DIR}/${srtm}" ] && { echo "skip ${srtm}" 1>&2; continue; }
+   xmin=$(echo "${aw3d30}" | awk -F / 'substr($NF,15,1)=="E"{print substr($NF,21,3)*1} substr($NF,15,1)=="W"{print substr($NF,16,3)*(-1)}')
+   ymin=$(echo "${aw3d30}" | awk -F / 'substr($NF,11,1)=="N"{print substr($NF,12,3)*1} substr($NF,11,1)=="S"{print substr($NF,12,3)*(-1)}')
+   xmax=$(echo "${xmin}"+1 | bc)
+   ymax=$(echo "${ymin}"+1 | bc)
+   xmin=$(echo "${xmin}"-"${res}" | bc)
+   ymin=$(echo "${ymin}"-"${res}" | bc)
+   xmax=$(echo "${xmax}"+"${res}" | bc)
+   ymax=$(echo "${ymax}"+"${res}" | bc)
+   gdalwarp -te "${xmin}" "${ymin}" "${xmax}" "${ymax}" -ts 3601 3601 -r bilinear ${vrtfile} ${OUTPUT_DIR}/"${srtm}".tif
+   gdal_translate -of SRTMHGT ${OUTPUT_DIR}/"${srtm}".tif ${OUTPUT_DIR}/"${srtm}"
+   rm -f ${OUTPUT_DIR}/"${srtm}".tif
+
+done
+
+rm $vrtfile
+```
+
+Execute the commands within the osgeo/gdal image:
+
+```
+docker run -it --rm -v /Users/turnrye/signal-server/AW3D30:/AW3D30 -v /Users/turnrye/signal-server/AW3D30-sdf:/AW3D30-sdf --entrypoint /bin/bash osgeo/gdal
+``` 
+
+Once this is done, you should have a directory with a bunch of HGT files ready to go. So run the conversion from HGT to SDF now.
+
+```
+docker run -v /Users/turnrye/signal-server/AW3D30/aw3d30_srtmhgt/output:/srtm -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf --entrypoint /bin/bash signal-server -c 'cd /sdf && (for i in /srtm/*.hgt; do /signal-server/utils/sdf/usgs2sdf/srtm2sdf-hd $i; done)'
+```
+
+Remember that with your HD data, you'll need to modify the commands to use `signalserverHD` and `/Users/turnrye/signal-server/AW3D30-sdf`.
+
+## Get your antenna data
+
+Next, get the antenna data that you'll use for your map. If you're using a Ubiquiti antenna, you can find it [on this page](https://help.ui.com/hc/en-us/articles/204952114-airMAX-Antenna-Data). For this tutorial, I'll be using the AM-5G19-120. Download the `.ant` files.
+
+Unzip the files to a convenient location, in my case `/Users/turnrye/signal-server/ant`. Then, just like before we need to convert the files. Let's use the `ant2azel` conversion script for this:
+
+```
+docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AM-5G19-120-Vpol.ant
+docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AM-5G19-120-Hpol.ant
+```
+
+Our application expects the antenna for a given output file to be present in the same directory and named the same as the output file name (less the extension). So this means we now need to copy these files to our `/out` directory where we'll expect results to be.
+
+Also, we actually are only going to be generating the coverage report for one polarity despite having dual polarity. This is because in all honesty, we don't expect this map to want to show coverages that could only be achieved with both polarities. This means that in some scenarios the map will be pessimistic, but that's for the better: it's almost always too generous anyway.
+
+So, let's copy just the horizontal polarity data into our `out` directory with a simple `ant` name to shorten the next few commands.
+
+```
+cp /Users/turnrye/signal-server/ant/AM-5G19-120-Hpol.az /Users/turnrye/signal-server/out/ant.az
+cp /Users/turnrye/signal-server/ant/AM-5G19-120-Hpol.el /Users/turnrye/signal-server/out/ant.el
+```
+
+## Create the coverage models
+
+Now it's time to actually generate the coverage map. This assumes you want to run the coverage for one site with three sector antennas at (0,120,240) degrees true bearing. We'll call this "sco" and number the sectors 1, 2, and 3 accordingly.
+
+First, copy the antenna files into place
+
+```
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/sco1.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/sco1.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/sco2.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/sco2.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/sco3.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/sco3.el
+```
+
+Then, generate the coverages. Note these commands are where you specify key things like lat/lon, tx height, frequency, erp, rx height, receive threshold, and antenna bearing. To see what these options are, run `docker run -it --rm signal-server`. By the way, in my example here ERP is an insane 39kWatt, that is because of the following:
+
+> 27 dBm + 19 dBi + 30 dBi = 39811 watts
+
+Thanks Tom KD7LXL for piecing this together for me (and many others).
+
+```
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.138667 -lon -90.020167 -txh 62.7888 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 0 -o /out/sco1
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.138667 -lon -90.020167 -txh 62.7888 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 120 -o /out/sco2
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.138667 -lon -90.020167 -txh 62.7888 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 240 -o /out/sco3
+```
+
+## Convert the output to a file you can use
+
+The previous commands output an antiquated ppm file format which we can't really use. So, let's convert it to PNG.
+
+```
+convert /Users/turnrye/signal-server/out/sco1.ppm -transparent white /Users/turnrye/signal-server/out/sco1.png
+convert /Users/turnrye/signal-server/out/sco2.ppm -transparent white /Users/turnrye/signal-server/out/sco2.png
+convert /Users/turnrye/signal-server/out/sco3.ppm -transparent white /Users/turnrye/signal-server/out/sco3.png
+```
+
+The trouble is, PNGs dont have any geodata. We dont want to lose this, so let's add it to the file using the geotiff format. First, we have to refer back to our signalserver output from above. It tells us the bounds of the images. For instance, given this output from signalserver: `|36.004994|-88.768667|34.204996|-90.968667|`, we can juggle the numbers around and then use gdal_translate like so:
+```
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038666 -88.920167 34.238668 /out/sco1.png /out/sco1.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038666 -88.920167 34.238668 /out/sco2.png /out/sco2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038666 -88.920167 34.238668 /out/sco3.png /out/sco3.geotiff 
+```
+
+Out plops a geotiff that you can use in a GIS application. From here you could make tiles to publish you map to the web or do further GIS analysis.
+
+
+## Full example
+
+Let's try another location with a full example. In this run, I'll be using our real production data. A few adjustments have to be made but they're commented below.
+
+| site | ground elevation per srtm | ground elevation per aw3d30 | real height | calculated height using aw3d30 |
+| ---- | ------------------------- | --------------------------- | ----------- | -------------------------------|
+| hil  | 91.94                     | 104                         | 100         | 100-(104-91.94) = 87.94        |
+
+
+Here's the entire block of commands:
+```
+# SCO
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038111 -88.920167 34.239223 /out/sco1.png /out/sco1-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038111 -88.920167 34.239223 /out/sco2.png /out/sco2-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -91.120167 36.038111 -88.920167 34.239223 /out/sco3.png /out/sco3-2.geotiff 
+
+
+# HIL
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/hil1.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/hil1.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/hil2.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/hil2.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/hil3.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/hil3.el
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.105 -lon -89.868667 -txh 87.94 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 0 -o /out/hil1
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.105 -lon -89.868667 -txh 87.94 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 120 -o /out/hil2
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.105 -lon -89.868667 -txh 87.94 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 240 -o /out/hil3
+convert /Users/turnrye/signal-server/out/hil1.ppm -transparent white /Users/turnrye/signal-server/out/hil1.png
+convert /Users/turnrye/signal-server/out/hil2.ppm -transparent white /Users/turnrye/signal-server/out/hil2.png
+convert /Users/turnrye/signal-server/out/hil3.ppm -transparent white /Users/turnrye/signal-server/out/hil3.png
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil1.png /out/hil1-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil2.png /out/hil2-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil3.png /out/hil3-2.geotiff
+```
+
+
+## Bonus points: generate xyztiles from QGis
+```
+{
+  "area_units": "m2",
+  "distance_units": "meters",
+  "ellipsoid": "EPSG:7019",
+  "inputs": {
+    "BACKGROUND_COLOR": "rgba( 0, 0, 0, 0.00 )",
+    "DPI": 98,
+    "EXTENT": "-91.623616369,-88.389526398,34.549546689,35.700711754 [EPSG:4269]",
+    "METATILESIZE": 4,
+    "OUTPUT_DIRECTORY": "TEMPORARY_OUTPUT",
+    "OUTPUT_HTML": "TEMPORARY_OUTPUT",
+    "QUALITY": 75,
+    "TILE_FORMAT": 0,
+    "TILE_HEIGHT": 256,
+    "TILE_WIDTH": 256,
+    "TMS_CONVENTION": false,
+    "ZOOM_MAX": 14,
+    "ZOOM_MIN": 8
+  }
+}
+```
+
+
 _Below is an old blog post from the website. It serves as a reference that is 7 years out of date. Help wanted getting this back up-to-date._
 
 Today I document how I generate my coverage maps, and I want to take my maps a step farther to calculate which amateurs fall in the coverage area. I’ll describe the complete process using a potential cell site “Crosstown”.

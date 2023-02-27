@@ -80,8 +80,8 @@ Next, get the antenna data that you'll use for your map. If you're using a Ubiqu
 Unzip the files to a convenient location, in my case `/Users/turnrye/signal-server/ant`. Then, just like before we need to convert the files. Let's use the `ant2azel` conversion script for this:
 
 ```
-docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AM-5G19-120-Vpol.ant
-docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AM-5G19-120-Hpol.ant
+docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AMO-5G13-Hpol.ant
+docker run -v /Users/turnrye/signal-server/ant:/ant --entrypoint python2 signal-server /signal-server/utils/antenna/ant2azel.py -i /ant/AMO-5G13-Vpol.ant
 ```
 
 Our application expects the antenna for a given output file to be present in the same directory and named the same as the output file name (less the extension). So this means we now need to copy these files to our `/out` directory where we'll expect results to be.
@@ -149,7 +149,8 @@ Let's try another location with a full example. In this run, I'll be using our r
 | site | ground elevation per srtm | ground elevation per aw3d30 | real height | calculated height using aw3d30 |
 | ---- | ------------------------- | --------------------------- | ----------- | -------------------------------|
 | hil  | 91.94                     | 104                         | 100         | 100-(104-91.94) = 87.94        |
-
+| mno  |  ? | 106 | ? | 131 - 106 = 25 |
+| crw  | Real elevation: 168.554 | 163 | 169-163 = 6 |
 
 Here's the entire block of commands:
 ```
@@ -175,6 +176,34 @@ convert /Users/turnrye/signal-server/out/hil3.ppm -transparent white /Users/turn
 docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil1.png /out/hil1-2.geotiff 
 docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil2.png /out/hil2-2.geotiff 
 docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.968111 36.004444 -88.769223 34.205556 /out/hil3.png /out/hil3-2.geotiff
+
+# MNO
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/mno1.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/mno1.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/mno2.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/mno2.el
+cp /Users/turnrye/signal-server/out/ant.az /Users/turnrye/signal-server/out/mno3.az
+cp /Users/turnrye/signal-server/out/ant.el /Users/turnrye/signal-server/out/mno3.el
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.234667 -lon -89.892 -txh 25 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 0 -o /out/mno1
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.234667 -lon -89.892 -txh 25 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 120 -o /out/mno2
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 35.234667 -lon -89.892 -txh 25 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 240 -o /out/mno3
+convert /Users/turnrye/signal-server/out/mno1.ppm -transparent white /Users/turnrye/signal-server/out/mno1.png
+convert /Users/turnrye/signal-server/out/mno2.ppm -transparent white /Users/turnrye/signal-server/out/mno2.png
+convert /Users/turnrye/signal-server/out/mno3.ppm -transparent white /Users/turnrye/signal-server/out/mno3.png
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.993389 36.134111 -88.790611 34.335223 /out/mno1.png /out/mno1-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.993389 36.134111 -88.790611 34.335223 /out/mno2.png /out/mno2-2.geotiff 
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.993389 36.134111 -88.790611 34.335223 /out/mno3.png /out/mno3-2.geotiff
+
+# CRW
+cp /Users/turnrye/signal-server/ant/AMO-5G13-Vpol.az /Users/turnrye/signal-server/out/crw1.az
+cp /Users/turnrye/signal-server/ant/AMO-5G13-Vpol.az /Users/turnrye/signal-server/out/crw1.el
+docker run -it -v /Users/turnrye/signal-server/color:/color -v /Users/turnrye/signal-server/ant:/ant -v /Users/turnrye/signal-server/AW3D30-sdf:/sdf -v /Users/turnrye/signal-server/out:/out --entrypoint ./signalserverHD signal-server -sdf /sdf -m -dbm -pm 1 -dbg -lat 34.9745 -lon -89.866333 -txh 6 -f 5900 -erp 39811 -rxh 10 -rt -80 -R 100 -rot 0 -o /out/crw1
+convert /Users/turnrye/signal-server/out/crw1.ppm -transparent white /Users/turnrye/signal-server/out/crw1.png
+docker run -it -v /Users/turnrye/signal-server/out:/out --entrypoint gdal_translate osgeo/gdal -of GTiff -a_srs EPSG:4326 -a_ullr -90.964111 35.873944 -88.768555 34.075056 /out/crw1.png /out/crw1-2.geotiff
+
+# LEB
+
+# AZO
 ```
 
 

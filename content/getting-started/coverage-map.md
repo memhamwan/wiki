@@ -32,13 +32,27 @@ var hil_coverage = L.tileLayer('/map-tiles/hil-coverage/{z}/{x}/{y}.png', {
     attribution: '&copy; HamWAN Memphis Metro',
     opacity: 0.5
 }).addTo(map);
+var mno_coverage = L.tileLayer('/map-tiles/mno-coverage/{z}/{x}/{y}.png', {
+    maxZoom: 14,
+    minZoom: 8,
+    attribution: '&copy; HamWAN Memphis Metro',
+    opacity: 0.5
+}).addTo(map);
+var crw_coverage = L.tileLayer('/map-tiles/crw-coverage/{z}/{x}/{y}.png', {
+    maxZoom: 14,
+    minZoom: 8,
+    attribution: '&copy; HamWAN Memphis Metro',
+    opacity: 0.5
+}).addTo(map);
 var baseLayers = {
     "Terrain": terrain,
     "Streets": osm
 };
 var overlays = {
     "SCO Coverage": sco_coverage,
-    "HIL Coverage": hil_coverage
+    "HIL Coverage": hil_coverage,
+    "MNO Coverage": mno_coverage,
+    "CRW Coverage": crw_coverage
 };
 L.control.layers(baseLayers, overlays, { collapsed: false, hideSingleBase: true }).addTo(map);
 function onEachFeature(feature, layer) {

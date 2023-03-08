@@ -199,7 +199,7 @@ The equipment on this site uses a mixture of licensed and unlicensed spectrum. T
 
 ## Radio Engineering
 
-For an estimate of coverage, view the [coverage map](../../getting-started/coverage-map).
+For an estimate of coverage, view the [coverage map](../../../getting-started/coverage-map).
 
 ### hil.crw
 

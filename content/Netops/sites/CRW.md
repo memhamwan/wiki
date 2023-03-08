@@ -189,9 +189,7 @@ coconut.crw is located in cab2.2. It is an HP proliant server. It has a single e
 
 ### Subnetting
 
-- 44.34.129.??/28
-- 44.34.129.??/28
-- 44.34.129.??/28
+See entries tagged "CRW" on the [Subnetting page](../../Subnetting).
 
 # Wireless
 

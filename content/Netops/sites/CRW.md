@@ -2,11 +2,11 @@
 title: CRW
 ---
 
-CRW is a point-of-presence site at the City of Olive Branch, MS's water tower nearby Craft Rd and US-78.
+CRW is a point-of-presence site at the City of Olive Branch, MS's water tower nearby Craft Rd and US-78 (34.97440959491132, -89.86623979530327). The top of tower is estimated to be 168.554m elevation.
 
 # Standards
 
-This deployment is treated as a TIA-606 class 1 deployment.
+This deployment is treated as a [TIA-606](https://www.bradyid.com/resources/tia-606-c-cable-labeling-standards) class 1 deployment. Cabling is _not_ labeled however.
 
 # Physical Deployment
 
@@ -176,73 +176,112 @@ This rack-mount POE injector is a ws-poe-12-1u located in cabinet 2.2. It provid
 
 ## Networking Subsystems
 
+```goat
+                               .----------------------.                                       .--------------.
+                               | r1.crw:switch-bridge +<------------------------------------->+ r1.crw:OBARC |
+                               .-------+--------------.                                       .------+-------.
+                                       ^                                                             ^
+                                       | 44.34.129.116/28                                            | 44.34.129.177/28
+          .------------------.---------.---.---------------.-------------------.                     |
+          |                  |             |               |                   |                     |
+          v                  v             v               v                   v                     v
+.---------+-------.  .-------+-----.  .----+----.  .-------+--------.  .-------+--------.  .---------+-----------------.
+| ilo.coconut.crw |  | coconut.crw |  | ups.crw |  | r2.crw:bridge1 |  | r3.crw:bridge1 |  | obarc switch (user space) |
+.-----------------.  .-------------.  .---------.  .-------+--------.  .-------+--------.  .---------------------------.
+                                                           ^                   ^
+                                          44.34.129.145/28 |                   |
+                               .-------------.-------------.                   .-------------------.
+                               |             |             |                   |                   |
+                               v             v             v                   v                   v
+                          .----+-----.  .----+-----.  .----+-----.     .-----------------.  .----------------.
+                          | cam3.crw |  | cam2.crw |  | cam1.crw |     | omn1.crw:ether1 |  | hil.crw:ether1 |
+                          .----------.  .----------.  .----------.     .-------+---------.  .--------+-------.
+                                                                               ^                   ^
+                                                                               |                   |
+                                                                               v                   v
+                                                                       .-------+--------.  .-------+-------.
+                                                                       | omn1.crw:wlan1 |  | hil.crw:wlan1 |
+                                                                       .----------------.  .---------------.
+                                                                        44.34.129.129/28    44.34.131.144/32
+```
+
 ### r1.crw
 
 r1.crw is located in cabinet 2.2. It is an [MikroTik RB3011UiAS-RM](/engineering-references/mikrotik-RB3011UiAS-RM.pdf).
 
-| Physical Port | Use              |
-| ------------: | ---------------- |
-|          sfp1 |                  |
-|          eth1 | poe in           |
-|          eth2 |                  |
-|          eth3 | r2.crw           |
-|          eth4 | 2.2-42:?         |
-|          eth5 |                  |
-|          eth6 | ups.crw          |
-|          eth7 | 2.2-42:?         |
-|          eth8 | 2.2-42:?         |
-|          eth9 | ilo.coconut.crw  |
-|         eth10 | eth0.coconut.crw |
+| Physical Port | Use                      |
+| ------------: | ------------------------ |
+|          sfp1 |                          |
+|        ether1 | poe in                   |
+|        ether2 |                          |
+|        ether3 | 2.2-42:? (r2.crw:ether1) |
+|        ether4 | 2.2-42:? (r3.crw:ether1) |
+|        ether5 |                          |
+|        ether6 | ups.crw                  |
+|        ether7 | 2.2-42:? (obarc 2.1)     |
+|        ether8 | 2.2-42:? (obarc 2.1)     |
+|        ether9 | ilo.coconut.crw          |
+|       ether10 | eth0.coconut.crw         |
 
 ### r2.crw
 
 [MikroTik PowerBOX](/engineering-references/mikrotik-RB750P-PBr2.pdf) mounted on the unistrut on mast1.
 
-| Physical Port | Use               |
-| ------------: | ----------------- |
-|          eth1 | 2.2-42:? (r1.crw) |
-|          eth2 |                   |
-|          eth3 |                   |
-|          eth4 |                   |
-|          eth5 |                   |
+| Physical Port | Use                      |
+| ------------: | ------------------------ |
+|        ether1 | 2.2-42:? (r1.crw:ether3) |
+|        ether2 |                          |
+|        ether3 | cam2.crw                 |
+|        ether4 | cam1.crw                 |
+|        ether5 |                          |
 
-Unlocated: cam1.crw, cam2.crw, cam3.crw
+Unlocated: cam3.crw
 
 ### r3.crw
 
 [MikroTik PowerBOX](/engineering-references/mikrotik-RB750P-PBr2.pdf) mounted on the unistrut on mast1.
 
-| Physical Port | Use               |
-| ------------: | ----------------- |
-|          eth1 | 2.2-42:? (r1.crw) |
-|          eth2 |                   |
-|          eth3 |                   |
-|          eth4 |                   |
-|          eth5 |                   |
-
-Unlocated: hil.crw, omn1.crw
+| Physical Port | Use                      |
+| ------------: | ------------------------ |
+|        ether1 | 2.2-42:? (r1.crw:ether4) |
+|        ether2 |                          |
+|        ether3 | hil.crw:ether1           |
+|        ether4 |                          |
+|        ether5 | omn1.crw:ether1          |
 
 ### Backhaul to Hilton site (hil.crw)
 
-[MikroTik 921UAGS-5SHPacD](/engineering-references/mikrotik-netmetal.pdf). hil.crw is a point-to-point link to East Memphis providing backhaul for the CRW site. It is connected via MikroTik waveguide rpsma cabling to a mANT30 (non precision mount) that has a sleeve and radome kit installed. It is mounted about 2/3rds of the way up mast1. mNAT 30 non precision. One of the mounting bolts threads have stretched and so it is not easily put on or off. Includes sleeve and radome.
+[MikroTik 921UAGS-5SHPacD](/engineering-references/mikrotik-netmetal.pdf). hil.crw is a point-to-point link to East Memphis providing backhaul for the CRW site. It is connected via [MikroTik Flex-guide](/engineering-references/mikrotik-flex-guide.pdf) cabling to a [MikroTik mANT30](/engineering-references/mikrotik-mant30.pdf) that has a [MikroTik Sleeve30](/engineering-references/mikrotik-sleeve30.pdf) installed. It is mounted about 2/3rds of the way up mast1. One end of a mast mount U bolt's threads have stretched and so it is not easily put on or off.
 
-| Physical Port | Use      |
-| ------------: | -------- |
-|          eth1 | r3.crw:? |
+| Physical Port | Use           |
+| ------------: | ------------- |
+|        ether1 | r3.crw:ether3 |
 
 ### Omni for subscribers (omn1.crw)
 
 [Uibquiti AMO-5G13](/engineering-references/ubiquiti-amo.pdf) with [MikroTik RB912UAG-5HPnD](/engineering-references/mikrotik-rb912.pdf) in an [RF Elements SBX-S-CC-2SMA](/engineering-references/rfelements-sbx-s-cc-2sma.pdf). Mounted at the top of mast1.
 
-| Physical Port | Use      |
-| ------------: | -------- |
-|          eth1 | r3.crw:? |
+| Physical Port | Use           |
+| ------------: | ------------- |
+|        ether1 | r3.crw:ether5 |
 
 ## Computing Subsystems
 
 ### coconut.crw
 
 coconut.crw is located in cabinet 2.2. It is an HP proliant server. It has a single ethernet port and a dedicated iLO port for OOB management. This device is currently on standby -- it has no workloads deployed. Long term, the intent is to deploy a k3s cluster to this hardware and have a 2nd availability zone for k3s workloads. This would provide redundancy for systems like DNS and NTP and allow us to migrate services as needed.
+
+### cam1.crw
+
+[Vikviz 4518X-IZ](/engineering-references/vikviz-4518X-IZ.pdf) mounted on a [Carlton E987NR](/engineering-references/carlton-e987nr.pdf). This can be accessed via [BlueIris](http://blueiris.leb.memhamwan.net/).
+
+### cam2.crw
+
+Mounted on a 6x6x? conduit box shared with cam3. Currently the lens is full of water and so it is not functional.
+
+### cam3.crw
+
+Mounted on a 6x6x? conduit box shared with cam2. This can be accessed via [BlueIris](http://blueiris.leb.memhamwan.net/).
 
 ## Networking Subsystems
 

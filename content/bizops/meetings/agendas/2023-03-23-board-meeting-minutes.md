@@ -20,7 +20,7 @@ title: 2023-03-23 Board Meeting Agenda
 
 ## Previous Meeting
 
-- @turnrye: Our last board meeting was on 2022-09-22 and [here are it's meeting minutes](../minutes/2022-09-22-board-meeting-minutes). There have been no edits since @seichold published them.
+- @turnrye: Our last board meeting was on 2022-09-22 and [here are it's meeting minutes](../../minutes/2022-09-22-board-meeting-minutes). There have been no edits since @seichold published them.
     
 ## Officers Report
 

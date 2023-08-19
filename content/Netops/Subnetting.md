@@ -30,10 +30,11 @@
 | 44.34.129.144/28 | LAN, CRW for IOT/Cameras          |
 | 44.34.129.160/28 | LAN, RET                          |
 | 44.34.129.176/28 | Users, CRW Ethernet OBARC         |
-| 44.34.129.192/28 | LAN, FTN                          |
+| 44.34.129.192/28 | LAN, FTN (DHCP pool on 196/31)    |
 | 44.34.129.208/28 | LAN, ATL er1 cloud router         |
 | 44.34.129.224/28 |                                   |
 | 44.34.129.240/28 |                                   |
+| 44.34.130.0/28   | User LAN (DHCP), HIL              | 
 | 44.34.131.130/31 | PTP, between HIL and LEB          |
 | 44.34.131.138/31 | PTP, between HIL and MNO          |
 | 44.34.131.140/31 | PTP, between LEB and MNO          |

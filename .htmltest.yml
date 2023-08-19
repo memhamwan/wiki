@@ -6,3 +6,4 @@ IgnoreURLs:
   - https://github.com/memhamwan/wiki/edit/main/ # Because the page we're editing may not exist yet
   - https://gitlab.com/ # apparently we get ratelimited?? bummer
   - https://help.ui.com # this appears to be rate limited as well
+  - http://d.liveatc.net/ # this appears to be rate limited as well

@@ -51,7 +51,7 @@ title: 2022-09-22 Board Meeting Minutes
   
   - The following equipment replacement / purchases have been tabled for now:
     - Ubiquiti Networks PC-12 Outdoor DC Power Cabling, 12 AWG 1000Ft (estimated at $595)
-    - Quote is pending here: https://www.streakwave.com/amasty_quote/account/view/quote_id/252903/    
+    - Quote is pending here: [https://www.streakwave.com/amasty_quote/account/view/quote_id/252903/](https://www.streakwave.com)  
   
 - @turnrye: discussion about pursuing a lease with Lewisburg water to have a jumping off point further south -- 5 GHz link from CRW to there, would be a potential backhaul P2P site and service OBARC repeater; motion to permit Ryan to enter a lease with sec/tres review of the lease within the next 12 months, with a standing approval for up to $1000 outlay towards equipment
   - @turnrye I move that Ryan be authorized to act as agent and enter into a nominal lease with Lewisburg Water Association for locating a PtP site at their water tower within the next 12 months.. Motion seconded by @cliff.gurlen and @seichold, @turnrye, @KK4IOH, @cliff.gurlen voted in the affirmative. The motion passes.
